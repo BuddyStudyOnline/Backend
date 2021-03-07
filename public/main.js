@@ -163,13 +163,13 @@ $(function() {
   socket.on('login', (data) => {
     connected = true;
     // Display the welcome message
-    const message = 'Welcome to AnimeChatTing ';
+    const message = 'Welcome to Study Buddies';
     log(message, {
       prepend: true
     });
     addParticipantsMessage(data);
     console.log(data.previousMessages)
-    let prevMessage = data.previousMessages.sort((a, b) => a.id > b.id ? 1 :-1);
+    let prevMessage = data.previousMessages.sort((a, b) => a.id > b.id ? 1 : -1); // Messages are constructed
     for (let i = 0; i < data.previousMessages.length; i++){
       addChatMessage(data.previousMessages[i]);
     }

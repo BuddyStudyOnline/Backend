@@ -5,7 +5,7 @@ const app = express();
 const path = require('path');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // Database Connect and Fetch Data
 const client = new cassandra.Client({
@@ -19,14 +19,13 @@ const client = new cassandra.Client({
 });
 
 const query = 'SELECT * FROM sloth';
-
 async function fetchData(query, socket) {
   let previousMessages = await client.execute(query, []).then(result => result.rows);
   socket.emit('login', {
     previousMessages,
     numUsers: numUsers
   });
-  
+
   // echo globally (all clients) that a person has connected
   socket.broadcast.emit('user joined', {
     username: socket.username,
@@ -53,6 +52,7 @@ io.on('connection', (socket) => {
     console.log(data)
     pushData(socket, data);
   });
+
   async function pushData(socket, data){
     const queryID = 'SELECT MAX(id) FROM sloth';
     let latestID = await client.execute(queryID, []).then(result => result.rows);

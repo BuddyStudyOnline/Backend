@@ -19,8 +19,6 @@ const client = new cassandra.Client({
 });
 
 const query = 'SELECT * FROM sloth';
-// Only query when you send a new message (Don't worry about deadlock here hehe)
-// const query = 'SELECT MAX(id) FROM sloth';
 
 async function fetchData(query, socket) {
   let previousMessages = await client.execute(query, []).then(result => result.rows);
@@ -28,6 +26,7 @@ async function fetchData(query, socket) {
     previousMessages,
     numUsers: numUsers
   });
+  
   // echo globally (all clients) that a person has connected
   socket.broadcast.emit('user joined', {
     username: socket.username,
